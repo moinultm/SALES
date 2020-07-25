@@ -1,0 +1,456 @@
+
+<div class="content-wrapper">
+
+  <div class="content-header">
+    <div class="container-fluid">
+        <div class="text-center loading-data" >
+
+            <mat-progress-bar mode="indeterminate" *ngIf="loading" ></mat-progress-bar>
+
+      </div>
+      <!--div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">New Sales</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">Home</a></li>
+            <li class="breadcrumb-item"><a>Stock</a></li>
+            <li class="breadcrumb-item active">New Invoice</li>
+          </ol>
+        </div>a
+      </div-->
+    </div>
+  </div>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="card card-outline">
+            <div class="card-header">
+              <h3 class="card-title">
+                  <i class="fas fa-edit"></i>
+                  Sales SI Form</h3>
+
+                  <div class="card-tools">
+                      <a href="#" [routerLink]="['/sell']" class="nav-link d-inline"
+                      [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active">
+                      <span class="badge">View All List</span></a>
+
+                      <button type="button" class="btn btn-tool" data-card-widget="maximize">
+                        <i class="fas fa-expand"></i>
+                      </button>
+                  </div>
+
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+            <form [formGroup]="mainForm">
+
+              <div class="card-body">
+
+                <div class="row  mb-3">
+                    <div class="col-md-12">
+
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Bill to:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                          <span class="input-group-text"> <i class="fas fa-user-tag"></i></span>
+                                        </div>
+                                        <select class="form-control" formControlName="customerName">
+                                            <option [value]="null">Select Customer</option>
+                                          <option *ngFor="let list of customerList" [value]="list.id">
+                                            {{list.full_name}} :: {{list.client_code}}
+                                          </option>
+                                        </select>
+                                      </div>
+                                  </div>
+                              </div>
+
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                  <label>Not in list:</label>
+
+                                  <div class="input-group">
+                                      <div class="input-group-prepend">
+                                        <span class="input-group-text"> <i class="far fa-user-circle"></i></span>
+                                      </div>
+                                      <button class="form-control btn btn-default " (click)="openDialog()">
+                                          Add new customer
+                                      </button>
+                                    </div>
+
+                                </div>
+                              </div>
+
+                              <div class="col-md-4">
+                                  <mat-form-field  class="full-width">
+                                    <input matInput [matDatepicker]="picker" placeholder="Bill Date" formControlName="sellDate">
+                                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                    <mat-datepicker #picker></mat-datepicker>
+                                  </mat-form-field>
+                                  <!--https://appdividend.com/2018/09/16/angular-datepicker-example-tutorial/-->
+                                </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4" *ngIf="!loading">
+                                <div class="form-group">
+                                 <label>Sales By:</label>
+                                 <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-user-tie"></i> </span>
+                                    </div>
+                                    <select class="form-control" formControlName="user_id">
+                                        <option [value]="null">Select Representative</option>
+                                       <option *ngFor="let list of users" [value]="list.id">
+                                         {{list.name}}
+                                       </option>
+                                     </select>
+                                  </div>
+
+                               </div>
+                           </div>
+
+                           <div class="col-md-4">
+                              <div class="form-group">
+                                <label>Payment Method:</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
+                                    </div>
+                                    <select class="form-control" formControlName="paymentMethod">
+                                        <option value="cash">Cash</option>
+                                        <option value="cheque">Cheque</option>
+                                      </select>
+                                  </div>
+                              </div>
+                            </div>
+
+
+                            <div class="col-md-4">
+                              <div class="form-group">
+                                <label>Sell Method:</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text"><i class="fas fa-money-bill-wave"></i></span>
+                                    </div>
+                                    <select class="form-control" formControlName="direct">
+                                        <option value="0">Reference</option>
+                                        <option value="1">Direct</option>
+                                      </select>
+                                  </div>
+                              </div>
+                              </div>
+
+                        </div>
+                    </div>
+
+                  </div>
+
+
+                    <div class="table-responsive  mb-3">
+
+                        <!--order items table-->
+                        <table class="table table-bordered">
+                          <thead class="thead-light">
+                            <th>ProductName</th>
+                            <th>Quantity</th>
+                            <th>Discount %</th>
+                            <th>MRP</th>
+                            <th>Subtotal</th>
+                            <th style="text-align: right;">
+                                <a class=" btn btn-success btn-sm text-white" (click)="initItemModal(addItemModal)"><i class="fa fa-plus"></i>
+                                  Add Item to bill</a>
+                            </th>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td class="font-italic text-center" colspan="6" *ngIf="orderItemList.length==0"
+                                [class.text-danger]="orderItemList.length==0">
+                                No product selected for this Invoice.
+                              </td>
+                            </tr>
+                            <tr *ngFor="let item of orderItemList;let i=index;">
+                              <td>{{item.product_name}}</td>
+                              <td>{{item.quantity}}</td>
+                              <td>{{item.product_discount_percentage}} %</td>
+                              <td>{{item.mrp}}</td>
+                              <td>{{item.sub_total}}</td>
+                              <td>
+                                <!--a class="btn btn-sm btn-info text-white"><i class="fas fa-edit"></i></a-->
+                                <a class="btn btn-sm btn-danger text-white ml-1" (click)="onDeleteOrderItem(item.product_id,i)"><i
+                                    class="fa fa-trash"></i></a>
+                              </td>
+                            </tr>
+                          </tbody>
+                          <tfoot>
+                            <tr>
+                              <td colspan="3" style="text-align: right; font-weight: bold;">
+                                  <label>Total </label>
+                              </td>
+                              <td colspan="3">
+                                  <input class="form-control" type="text" id="totalAmount" formControlName="totalAmount" readonly>
+                               </td>
+                            </tr>
+                            <tr>
+                              <td colspan="3" style="text-align: right; font-weight: bold;">
+                                  <label>Paid  </label>
+                              </td>
+                              <td colspan="3">
+                                  <input class="form-control" type="text" id="paidAmount" formControlName="paidAmount" placeholder="Paid Amount"
+                                  (keyup)="updateDueAmount()"
+                                  [class.has-error]="mainForm.get('paidAmount').dirty && mainForm.get('paidAmount').invalid">
+                               </td>
+                            </tr>
+                            <tr>
+                              <td colspan="3" style="text-align: right; font-weight: bold;">
+                                  <label> Discount on product  </label>
+                              </td>
+                              <td colspan="3">
+                                  <input class="form-control" type="text" id="discountAmount" formControlName="discountAmount" readonly>
+
+                               </td>
+                            </tr>
+                            <tr>
+                              <td colspan="3" style="text-align: right; font-weight: bold;">
+                                  <label> Discount on Total  </label>
+                              </td>
+                              <td colspan="3">
+                                  <input class="form-control" type="text" id="discountOnTotal" formControlName="discountOnTotal"  (keyup)="updateGrandTotal()">
+
+                               </td>
+                            </tr>
+                            <tr>
+                              <td colspan="3" style="text-align: right; font-weight: bold;">
+                                  <label>Delivery Costs  </label>
+                              </td>
+                              <td colspan="3">
+                                  <input class="form-control" type="text" id="shippingCost" formControlName="shippingCost"    (keyup)="updateGrandTotal()">
+
+                            </tr>
+                            <tr>
+                              <td colspan="3" style="text-align: right; font-weight: bold;">
+                                  <label>Net Total  </label>
+                              </td>
+                              <td colspan="3">
+                                  <input class="form-control" type="text" id="grandTotal" formControlName="grandTotal" readonly>
+
+                               </td>
+                            </tr>
+                            <tr>
+                              <td colspan="3" style="text-align: right; font-weight: bold;">
+                                  <label>Due </label>
+                              </td>
+                              <td colspan="3">
+                                  <input class="form-control" type="text" id="dueAmount" formControlName="dueAmount" readonly>
+
+                               </td>
+                            </tr>
+                          </tfoot>
+                        </table>
+                        <!-- order items table-->
+                      </div>
+
+                        <!--div class="row">
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+
+                                </div>
+                              </div>
+
+                              <div class="col-md-2">
+                                  <div class="form-group">
+
+                             </div>
+                                </div>
+
+
+                          <div class="col-md-2">
+                              <div class="form-group">
+
+</div>
+                          </div>
+                          <div class="col-md-2">
+                              <div class="form-group">
+
+</div>
+                          </div>
+                          <div class="col-md-2">
+                              <div class="form-group">
+
+</div>
+
+                          </div>
+
+
+                          <div class="col-md-1">
+                              <div class="form-group">
+
+</div>
+                          </div>
+
+
+                          <div class="col-md-1">
+                              <div class="form-group">
+
+</div>
+
+                          </div>
+
+                        </div-->
+
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <code>Bill Date is effective on every day</code>
+                <button type="button" class="btn btn-primary btn-lg float-right" [disabled]="mainForm.invalid || _saving" (click)="save(mainForm)"
+                  [disabled]="mainForm.invalid || _saving">Save Invoice</button>
+              </div>
+            </form>
+            <!-- Loading profiles indicator -->
+            <mat-spinner class="loading-profiles" *ngIf="_saving"></mat-spinner>
+            <!-- Loading profiles indicator -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+<!-- Content Wrapper. Contains page content -->
+
+<ng-template #addItemModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+    </h4>
+    <button type="button" class="close" aria-label="Close" (click)="close(modal)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <!-- Modal body -->
+  <div class="modal-body">
+
+    <form [formGroup]="formProducts" *ngIf="!loading">
+      <!--name-->
+      <h5>Product</h5>
+      <div class="form-group">
+        <select class="form-control" id="name" formControlName="name" (change)="updatePrice($event.target)">
+          <option value="0">--Select--</option>
+          <option *ngFor="let product of _productList" [ngValue]="product">
+            {{product.name}}   </option>
+        </select>
+      </div>
+      <!-- ./name-->
+
+
+      <div class="row">
+        <div class="col-md-4">
+          <!-- quantity field -->
+          <div class="form-group">
+            <label for="quantity">Quantity</label>
+            <input type="text" class="form-control" id="quantity" formControlName="quantity" (keyup)="updateSubTotal()"
+              [class.has-error]="formProducts.get('quantity').dirty && formProducts.get('quantity').invalid" />
+          </div>
+
+          <!-- ./quantity field -->
+        </div>
+        <div class="col-md-4">
+          <!-- productMRP field -->
+          <div class="form-group">
+            <label for="productMRP">MRP</label>
+            <input type="text" class="form-control" id="productMRP" formControlName="productMRP"
+              [class.has-error]="formProducts.get('productMRP').dirty && formProducts.get('productMRP').invalid"
+              readonly />
+          </div>
+
+          <!-- ./productMRP field -->
+        </div>
+        <div class="col-md-4">
+          <!-- discount field -->
+          <div class="form-group">
+            <label for="discountOnMRP">Discount MRP(%)</label>
+            <input type="text" class="form-control" id="discountOnMRP" formControlName="discountOnMRP"
+              (keyup)="updateSubTotal()"
+              [class.has-error]="formProducts.get('discountOnMRP').dirty && formProducts.get('discountOnMRP').invalid" />
+          </div>
+
+          <!-- ./discount field -->
+        </div>
+      </div>
+
+     <div class="row">
+
+      <div class="col-md-4">
+      <!-- itemTotal field -->
+      <div class="form-group">
+          <label for="itemTotal">Item Total</label>
+          <input type="text" class="form-control" id="itemTotal" formControlName="itemTotal"
+            [class.has-error]="formProducts.get('itemTotal').dirty && formProducts.get('itemTotal').invalid" readonly />
+        </div>
+
+        <!-- ./itemTotal field -->
+        </div>
+
+        <div class="col-md-4">
+            <!-- Discount field -->
+            <div class="form-group">
+                <label for="itemDiscountAmt">Discount Amt</label>
+                <input type="text" class="form-control" id="itemDiscountAmt" formControlName="itemDiscountAmt"
+                  [class.has-error]="formProducts.get('itemDiscountAmt').dirty && formProducts.get('itemDiscountAmt').invalid" readonly />
+              </div>
+
+              <!-- ./Dicount field -->
+            </div>
+
+        <div class="col-md-4">
+            <!-- itemTotal field -->
+            <div class="form-group">
+                <label for="sub_total">Sub Total</label>
+                <input type="text" class="form-control" id="sub_total" formControlName="sub_total"
+                  [class.has-error]="formProducts.get('sub_total').dirty && formProducts.get('sub_total').invalid" readonly />
+              </div>
+
+              <!-- ./itemTotal field -->
+              </div>
+
+     </div>
+
+
+
+    </form>
+    <!-- Loading profiles indicator -->
+    <mat-spinner class="loading-profiles" *ngIf="loading"></mat-spinner>
+    <!-- Loading profiles indicator -->
+
+    <!-- Modal footer -->
+    <div class="modal-footer">
+      <div class="">
+        <button type="button" class="btn btn-info" (click)="addItemToInvoice(formProducts,modal)"
+          [disabled]="formProducts.invalid ">Add to list</button>
+      </div>
+      <div class="">
+        <button type="button" class="btn btn-danger" aria-label="Close" (click)="close(modal)">
+          <span aria-hidden="true">End</span>
+        </button>
+
+      </div>
+
+    </div>
+    <!-- ./Modal footer -->
+
+
+  </div>
+
+</ng-template>
+
+

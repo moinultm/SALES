@@ -1,0 +1,198 @@
+<div class="content-wrapper">
+
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Details</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">Home</a></li>
+            <li class="breadcrumb-item"><a>Reciving</a></li>
+            <li class="breadcrumb-item active">Details</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+
+  <mat-spinner class="loading-profiles" *ngIf="loadingDetails"></mat-spinner>
+
+  <section class="content">
+    <div class="container-fluid" *ngIf="!loadingDetails">
+
+      <div class="page frontpage" id="print-section" style="background-color:ghostwhite;">
+
+         <!-- this row will not appear when printing -->
+         <div class="row no-print">
+          <div class="col-12" *ngFor="let  T of details.data ">
+            <a href="#" (click)="print('print-section')" class="btn btn-success float-right"><i class="fas fa-print"></i>
+              Print</a>
+          </div>
+        </div>
+
+
+        <div class="row">
+         <div class="col-md-12">
+          <div class="invoice p-3 mb-3">
+
+            <div class="header">
+              <div class="row mb-3">
+                <div class="col-md-8">
+   <!--img src="{{logoPreview}}{{'invoice_header' | configure }} " alt="" class="img-fluid"-->
+   <img src="/assets/images/trade-2.jpg" class="img-fluid">
+                  </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col-md-4 invoice-col" *ngFor="let  T of details.data ">
+                  <h4> <strong>Challan# {{T.reference_no}}</strong></h4>
+                  <strong>Transaction:</strong> {{T.id}}<br>
+                </div>
+                <div class="col-md-3 invoice-col">
+                  <p class="float-right" *ngFor="let  T of details.data"><strong>Date:   {{T.date |  date:'dd/MMM/yyyy'}}  </strong></p>
+                </div>
+
+
+                <div class="col-md-4 invoice-col">
+                  <address>
+                    Trade License No.<strong>TRAD/DSCC/290376/2019</strong> <br>
+                    TIN No. <strong>125371773865</strong><br>
+                    IRC No.  <strong>260326110965120</strong><br>
+                    VAT Reg. No. <strong>000966909-0208</strong>
+                  </address>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- info row -->
+            <div class="row invoice-info">
+              <div class="col-sm-7 invoice-col">
+                <address *ngFor="let  T of details.data ">
+                  Name:<strong>{{ T.user.name }}</strong> <br>
+                  Address:{{ T.user.address }} <br>
+                Phone:{{  T.user.phone }}<br>
+                <!--   Email:{{  T.user.email }}-->
+                </address>
+              </div>
+              <!-- /.col -->
+              <div class="col-sm-4 invoice-col" *ngFor="let  T of details.data">
+              <!-- Delivery Date:     <br>
+                Delivery by:  <br>-->
+
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+            <!-- Table row -->
+            <div class="row">
+              <div class="col-md-12">
+
+                <div class="responsive-table">
+
+                  <table class="table table-striped table-mini table-bordered" *ngIf="!loadingDetails">
+                    <thead>
+                      <tr>
+                        <th>Sl</th>
+                        <th>Product Name</th>
+                        <th>Qty</th>
+                        <th>Rate(MRP)</th>
+                        <th>Item Total</th>
+
+                      </tr>
+                    </thead>
+                    <tbody *ngFor="let T of details.data ;">
+
+                      <tr *ngFor="let TD of T.challans ; let i = index">
+                        <td>{{i+1}}</td>
+                        <td>{{TD.product.name}}</td>
+                        <td>{{TD.quantity}} </td>
+                        <td>{{TD.product.mrp  }} </td>
+                        <td>{{TD.product.mrp * TD.quantity }} </td>
+                      </tr>
+
+                    </tbody>
+                    <!--https://stackoverflow.com/questions/23842979/angularjs-sum-of-rows-ng-repeat-->
+
+                    <tfoot *ngFor="let T of details.data ;">
+
+                      <tr>
+                        <td></td>
+                        <td> <strong>Total</strong> </td>
+                        <td> <strong>{{ T.total_quantity_challan }} </strong> </td>
+                        <td>-</td>
+
+                      </tr>
+
+
+                    </tfoot>
+                  </table>
+                </div>
+
+              </div>
+              <!-- /.col -->
+            </div>
+            <!-- /.row -->
+
+
+            <div class="row ">
+
+              <div class="col-md-6">
+                <br> <br> <br> <br>
+                <strong> Receiver's Signature</strong>
+                <br> <br> <br> <br>
+              </div>
+              <div class="col-md-2"></div>
+              <div class="col-md-4">
+                <br> <br> <br> <br>
+                <strong> Authorised Signature</strong>
+                <br> <br> <br> <br>
+              </div>
+
+            </div>
+
+
+            <div class="row">
+              <div class="col-md-12 text-center">
+                <div class="page-footer">
+                  {{'address' | configure }}<br>
+                  Cell:{{'phone' | configure }}&#44;Email:{{'email' | configure }}<br>
+                  {{'pos_invoice_footer_text' | configure }}
+                </div>
+
+                <!--div class="page-footer">
+                  Head Office: 81/2(Ground floor), Nayapaltan,Dhaka-1000,Bangladesh<br>
+                  Cell:+8801793000277,Email:giasuddin8832@gmail.com, gmtradeint2004@gmail.com<br>
+                  Web:www.gmtradeinternational.com, F /gmtradeinternational&zarifcorporation
+                </div-->
+
+              </div>
+            </div>
+
+
+            <!-- this row will not appear when printing -->
+            <div class="row no-print">
+              <div class="col-12" *ngFor="let  T of details.data ">
+                <a href="#" (click)="print('print-section')" class="btn btn-success float-right"><i class="fas fa-print"></i>
+                  Print</a>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+
+
+</div>
+</section>
+
+</div>
+<!-- Content Wrapper. Contains page content -->

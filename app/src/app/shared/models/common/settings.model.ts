@@ -1,0 +1,23 @@
+export class   Settings  {
+id:number;
+site_name:string;
+slogan:string;
+address:string;
+email:string;
+phone:string;
+owner_name:string;
+site_logo:any;
+invoice_header:any;
+currency_code:string;
+alert_quantity:number;
+invoice_tax:number;
+invoice_tax_rate:number
+invoice_tax_type:string
+theme:string;
+vat_no:number
+enable_purchaser:number;
+enable_customer:number
+pos_invoice_footer_text:string;
+dashboard:string;
+product_tax:number;
+}

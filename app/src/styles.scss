@@ -1,0 +1,347 @@
+/* You can add global styles to this file, and also import other style files */
+
+//@import '../node_modules/font-awesome/css/font-awesome.min.css'
+@import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
+@import '../node_modules/ionicons/dist/css/ionicons.min.css';
+@import '../node_modules/admin-lte/dist/css/adminlte.min.css';
+@import '../node_modules/icheck-bootstrap/icheck-bootstrap.min.css';
+@import "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css";
+@import "../node_modules/ngx-toastr/toastr.css";
+@import "~@ng-select/ng-select/themes/default.theme.css";
+//@import "../node_modules/jqwidgets-ng/jqwidgets/styles/jqx.base.css";
+
+
+.mat-progress-bar {
+  height: 2px !important;
+}
+.corner-load{
+  margin: 0 auto;
+}
+
+/*pace*/
+ .pace-activity {
+  z-index: 2000!important;
+  position: fixed!important;
+  top:  0!important;
+  right: 0!important;
+}
+
+
+label:not(.form-check-label):not(.custom-file-label) {
+  font-weight: normal!important;
+}
+.cdk-overlay-pane {  z-index: 1051!important;}
+.cdk-overlay-container{ z-index: 1051!important;}
+.loading-data{}
+
+
+.print-only {display: none;}
+
+
+  /* remove scrollbar space
+.modal-dialog{
+  animation-name: example;
+  animation-duration: 0.3s;
+}
+
+@keyframes example {
+  0%   {transform: scale(0.5)}
+  100% {transform: scale(1)}
+}
+
+
+.menu-open{
+  background: #323232;
+}
+
+*/
+
+
+
+.sidebar-dark-primary .nav-sidebar>.nav-item>.nav-treeview {
+
+  background: #494e54;
+}
+
+.direct-over-flow {
+  -webkit-transform: translate(0,0);
+  transform: translate(0,0);
+  height: 250px;
+  overflow: auto;
+  padding: 10px;
+}
+
+/*############################print################
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #section-to-print, #section-to-print * {
+    visibility: visible;
+    color: white;
+
+  }
+  #section-to-print {
+position: absolute;
+    left: 0;
+    top: 0;
+
+  }
+  .pp40 {
+     border:none!important;
+
+  }
+}
+*/
+
+
+.mat-icon-button-small {
+  padding: 0;
+  min-width: 0;
+  width: 25px;
+  height: 25px;
+  flex-shrink: 0;
+  line-height: 25px;
+  border-radius: 50%;
+}
+
+
+.small{font-size: 10px !important;}
+.a4paper{
+  width: 100%;
+  /* height: 11.6in; */
+  overflow: scroll;
+  display: block;
+  /* border: 1px solid #ccc; */
+  margin: 10px auto;
+  padding: 0.1in 0 0 0.1in;
+  page-break-after: always;
+}
+
+.barcode-single-item {
+  display: block;
+  overflow: hidden;
+  text-align: center;
+  font-size: 12px;
+  line-height: 14px;
+  text-transform: uppercase;
+  float: left;
+}
+
+.barcode-item {
+  display: block;
+  text-align: center;
+  font-size: 12px;
+  line-height: 14px;
+  text-transform: uppercase;
+}
+
+.pp40 {
+  width: 2.2in;
+
+  padding: 0.05in;
+  border: 1px solid #ddd;
+  margin-top: 2px;
+  margin-bottom: 2;
+}
+
+.barcode-info-p {
+  line-height: 16px !important;
+  font-size: 12px !important;
+  color: black !important;
+  margin-bottom: 0;
+}
+
+/*############################print################*/
+
+.full-width{ width: 100%;}
+
+.mat-spinner{margin: auto;}
+
+mat-form-field {
+  margin-right: 15px;
+}
+
+.loading-profiles {
+  float: none;
+  margin: 0 auto;
+}
+
+input.ng-dirty.ng-invalid {
+color: red;
+border-color: #dc3545!important;
+}
+
+
+
+
+/* optional: show position indicator in red */
+::-webkit-scrollbar-thumb {
+  background: #ff0000;
+}
+
+body {
+  min-height: 100vh;
+}
+
+#root {
+  /* height: calc(100vh - 112px); */
+  min-height: 100vh;
+}
+
+.content-wrapper {
+  min-height: calc(100vh - 112px);
+}
+
+.main-header button {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.main-sidebar {
+  overflow-x: hidden;
+  z-index: 1001;
+}
+
+#sidebar-overlay {
+  z-index: 1000;
+}
+
+.login-card-body,
+.register-card-body {
+  background: #fff;
+  padding: 20px;
+  border-top: 0;
+  color: #666;
+}
+
+.login-card-body .input-group .input-group-text,
+.register-card-body .input-group .input-group-text {
+  color: #777;
+  background-color: transparent;
+}
+
+.login-card-body .input-group .form-control,
+.register-card-body .input-group .form-control {
+  border-right: none;
+}
+
+/*Scrollbar*/
+::-webkit-scrollbar {
+  width: 10px;
+  height: 7px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #656a71;
+  border-radius: 8px;
+}
+
+/*  */
+
+.card.user-list tr:hover {
+  cursor: pointer;
+}
+
+
+
+*:disabled {
+  cursor: not-allowed;
+}
+
+
+/**Custom CSS*/
+
+.table-mini{font-size: small;}
+.table-mini td {
+  padding: 0.25rem!important;
+}
+
+.table-bordered td, .table-bordered th {
+  border: 1px solid #000000!important;
+}
+.table thead th {
+  background:#e6EEEE;
+}
+
+.bg-light-green{background:#e6EEEE;}
+
+.table-responsive {  }
+
+
+table.pvtTable thead tr th, table.pvtTable tbody tr th {  border: 1px solid #000000 !important;}
+
+table.pvtTable {  font-family: sans-serif !important;}
+
+table.pvtTable tbody tr td {border: 1px solid #000000 !important;}
+
+
+
+.tool-style{
+  padding: 1em 1em 0 1em;
+ }
+
+ .page-footer{
+  font-size: small;
+ }
+
+
+
+
+/*PRINT*/
+@media print {
+
+  .pageA4landscape{
+     border: 0px solid black;
+     padding: 2px;
+     size: A4 landscape;
+   }
+
+   .pageA4portrait{
+     border: 2px solid black;
+     size: A4 portrait;
+   }
+
+   .page-footer {
+    
+     position: fixed;
+     bottom: 0;
+     width: 100%;
+     border-top: 1px solid #000000;
+   }
+
+ }
+/*PRINT END*/
+
+
+table { width: 100%; }
+.short {
+    background: lightblue;
+    width: 20%
+}
+.long {
+    background: lightgreen;
+    width: 40%;
+}
+.multiCells { background: #F3A633; }
+
+.table-xsmall  td, .table-xsmall  th{  padding: 0.2em !important;}
+.table-xsmall {font-size: 12px;}
+.pageA4landscape{
+
+  display: block;
+  size: A4 landscape;
+  margin: 10px auto;
+
+  page-break-after: always;
+}
+
+
+@media print
+{
+    .page-break { display:block; page-break-before:always; }
+}

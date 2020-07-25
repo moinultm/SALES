@@ -1,0 +1,234 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Total Sell Report</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">Home</a></li>
+            <li class="breadcrumb-item"><a>Reports</a></li>
+            <li class="breadcrumb-item active">Total Sell</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="card mb-3">
+            <div class="col-md-9 text-center mx-auto">
+             <form [formGroup]="form">
+                    <div class="tool-style">
+                      <div class="row">
+
+                        <div class="col-md-12 mb-3">
+
+                          <div class="row">
+                            <div class="col-md-4"><mat-form-field class="full-width">
+                              <input matInput [matDatepicker]="pickerFrom" placeholder="Start Date"
+                                formControlName="fromDate" [value]="date.value">
+                              <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                              <mat-datepicker #pickerFrom></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+
+                          <div class="col-md-4"><mat-form-field class="full-width">
+                              <input matInput [matDatepicker]="pickerTo" placeholder="End Date" formControlName="toDate"
+                                [value]="date.value">
+                              <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                              <mat-datepicker #pickerTo></mat-datepicker>
+                            </mat-form-field>
+                          </div>
+
+                            <div class="col-md-2 mb-3 my-auto">
+                              <button type="button" name="search" id="search" value="Search" (click)="dateFilter()" class="btn btn-success"
+                              [disabled]="form.invalid"><i class="fas fa-search"></i>&nbsp;Search</button>
+                            </div>
+
+                            <div class="col-md-2 mb-3 my-auto">
+                              <button type="button" name="print" id="search" value="Print" (click)="print('print-section')" class="btn btn-default"
+                              [disabled]="form.invalid"><i class="fas fa-print"></i>&nbsp;Print</button>
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                  </div>
+                </div><!--Tool Style-->
+
+            </form>
+          </div>
+          </div>
+        <!--card-->
+      <!-- /.card-header -->
+
+    <div class="card">
+        <div class="card-body">
+          <div id="print-section" style="min-height:500px">
+
+            <div class="pageA4landscape">
+                <!--HEADER-->
+                  <div class="row mb-3 text-center">
+                    <div class="col-md-5">
+                      <img src="{{logoPreview}}{{'invoice_header' | configure }} " alt="" class="img-fluid">
+                      <!--img src="/assets/images/trade-2.jpg" class="img-fluid"-->
+                    </div>
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-4">
+                      <p></p>
+                      <h5>Total Sale Report (representative and direct)</h5>
+                      <p>From Date: <strong>{{fromDate| date: 'dd/MM/yyyy'}}</strong> To:
+                        <strong>{{toDate |date: 'dd/MM/yyyy'}}</strong> </p>
+                    </div>
+                  </div>
+              <!--HEADER-->
+
+
+              <p>Details Data:-</p>
+
+              <div *ngIf="loading">
+                <p><strong>Report Data Not Generated</strong> </p>
+                  <mat-spinner></mat-spinner>
+                </div>
+
+
+              <ng-container *ngIf="!loading">
+              <table class="table table-bordered table-responsive table-xsmall">
+                <col>
+                <colgroup span="2"></colgroup>
+                <colgroup span="2"></colgroup>
+                <tr class="bg-light-green">
+                  <td rowspan="2"><strong>Sl</strong></td>
+                  <td rowspan="2"><strong>Name</strong></td>
+
+                  <th  colspan="2" scope="colgroup" *ngFor="let product of data.products">
+                    {{ product.name }}
+                  </th>
+
+                  <td rowspan="2"><strong>Totals</strong></td>
+
+                </tr>
+
+                <tr class="bg-light-green">
+                  <ng-container *ngFor="let product of data.products">
+                    <th scope="col">Qty</th>
+                    <th scope="col">Amt</th>
+                  </ng-container>
+                </tr>
+
+
+                <tr *ngFor="let user of data.users; let i = index">
+
+                  <th scope="row"> {{ i+1 }}</th>
+                  <th scope="row">{{ user.name }}</th>
+
+                  <ng-container *ngFor="let product of data.products">
+
+                  <td>
+                    <span *ngFor=" let cross of data.crossData">
+                      <div *ngIf="cross.USER_ID === user.id && cross.STOCK_ITEM_ID === product.id">
+                         {{    _CIP(cross.OUTWARD_QUANTITY)  }}
+                      </div>
+                    </span>
+                  </td>
+
+                  <td>
+                  <span *ngFor=" let cross of data.crossData">
+                    <div *ngIf="cross.USER_ID === user.id && cross.STOCK_ITEM_ID === product.id">
+                 {{ _CIN(cross.OUTWARD_AMOUNT)      }}
+                    </div>
+                  </span>
+                  </td>
+
+                  </ng-container>
+
+                  <th>
+                  <ng-container scope="row" *ngFor=" let char2 of data.charUser">
+                      <span *ngIf="char2.user_id === user.id">
+                        {{char2.Amount}}
+                      </span>
+                  </ng-container>
+                </th>
+
+                </tr>
+
+                <!--Footer Summary-->
+                <tr>
+                  <td></td>
+                  <td>Summary</td>
+
+                  <ng-container *ngFor="let product of data.products">
+                    <td>
+                      <span *ngFor=" let CHAR of data.char">
+                        <div  *ngIf=" CHAR.id === product.id">
+                        <strong> {{ CHAR.Quantity  }}</strong>
+                      </div>
+                      </span>
+                    </td>
+
+                    <td>
+                      <span *ngFor=" let CHAR of data.char">
+                        <div  *ngIf=" CHAR.id === product.id">
+                         <strong>{{ CHAR.Amount  }}</strong>
+                      </div>
+                      </span>
+                    </td>
+                    </ng-container>
+
+                  <td><strong>{{TotalAmount}}</strong></td>
+                </tr>
+
+              </table>
+
+            </ng-container>
+
+
+            <div class="row d-inline">
+              <div class="col-md-12 text-center">
+                <div class="page-footer">
+                  {{'address' | configure }}<br>
+                  Cell:{{'phone' | configure }}&#44;Email:{{'email' | configure }}<br>
+                  {{'pos_invoice_footer_text' | configure }}
+                </div>
+                <!--div class="page-footer">
+                              Head Office: 81/2(Ground floor), Nayapaltan,Dhaka-1000,Bangladesh<br>
+                              Cell:+8801793000277,Email:giasuddin8832@gmail.com, gmtradeint2004@gmail.com<br>
+                              Web:www.gmtradeinternational.com, F /gmtradeinternational&zarifcorporation
+                            </!div-->
+                  </div>
+                </div>
+
+            <!--NEW PIVOT TABLE-->
+
+            <!--div id="output"></div-->
+
+            <!--NEW PIVOT TABLE-->
+
+              </div>
+
+             </div>
+
+
+        </div>
+        <!-- /.card-body -->
+      </div>
+
+</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+<!-- Content Wrapper. Contains page content
+
+https://www.w3.org/WAI/tutorials/tables/irregular/
+-->

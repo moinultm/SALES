@@ -1,0 +1,197 @@
+<div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0 text-dark">Customer(s)</h1>
+              </div><!-- /.col -->
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                  <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">Home</a></li>
+                  <li class="breadcrumb-item"><a>Stock</a></li>
+                  <li class="breadcrumb-item active">Customer</li>
+                </ol>
+              </div><!-- /.col -->
+            </div><!-- /.row -->
+          </div><!-- /.container-fluid -->
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <div class="row ">
+                    <div class="col-md-12">
+
+                            <div class="card">
+
+
+
+                                <div class="card-header">
+
+                                    <div class="row">
+                                        <div class="col-md-6  mb-3">
+                                            <h3 class="card-title">List of customers |
+                                                Add customer <i class="fa fa-plus" (click)="openDialog()"></i>   </h3>
+
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                                     <div class="card-tools ">
+                                                    <div class="input-group input-group">
+                                                        <div class="input-group-prepend">
+                                                          <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                                        </div>
+                                                        <input type="text" class="form-control" placeholder="Mobile No" #input>
+                                                      </div>
+                                                </div>
+                                          </div>
+                                      </div>
+
+                                </div>
+                                <!-- /.card-header -->
+                                <div class="card-body  ">
+                                  <div class="table-responsive">
+
+
+                                    <table class="table table-bordered table-mini">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 10px">#</th>
+                                                <th>Customer Name</th>
+                                                <th>Code</th>
+                                                <th>Contact</th>
+                                                <th>Company Name</th>
+                                                <th>Total</th>
+                                                <th>Due</th>
+
+                                                <th style="width:20%">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr *ngIf="loading">
+                                                        <td colspan="12" class="text-center loading-data">
+                                                          <mat-spinner></mat-spinner>
+
+                                                        </td>
+                                                      </tr>
+
+                                                      <tr *ngIf="!loading && data && !data.data.length">
+                                                        <td colspan="12" class="text-center loading-data">
+                                                          No data created yet!
+                                                        </td>
+                                                      </tr>
+
+                                                      <ng-container *ngIf="!loading">
+                                                        <tr *ngFor="let item of data.data; let i = index">
+                                                          <td>{{ i+1 }}</td>
+                                                          <td>{{ item.full_name }}</td>
+                                                          <td>{{ item.client_code }}</td>
+
+                                                          <td>{{ item.contact }}</td>
+                                                          <td>{{ item.company_name }}</td>
+
+                                                          <td>{{ item.net_total }}</td>
+                                                          <td>{{ item.total_dues }}</td>
+                                                          <td class="actions">
+
+
+                                                        <button mat-icon-button color="accent"
+                                                        matTooltip="view details"
+                                                        (click)="openDialogDetails(item.id)">
+                                                          <mat-icon class="mat-18">flip_to_front</mat-icon>
+                                                        </button>
+
+                                                        <button mat-icon-button color="accent" matTooltip="Edit Client Information"
+                                                        (click)="openDialog(item)">
+                                                            <mat-icon>edit</mat-icon>
+                                                        </button>
+                                                        <button mat-icon-button color="accent"
+                                                        matTooltip="Delete invoice">
+                                                            <mat-icon>restore_from_trash</mat-icon>
+                                                          </button>
+
+                                                          <button mat-icon-button color="accent" [routerLink]="['/customer/report',item.id]"   [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active" matTooltip="View Client Stock Report">
+                                                          <mat-icon>open_in_browser</mat-icon>
+                                                        </button>
+                                                          </td>
+                                                        </tr>
+                                                      </ng-container>
+                                        </tbody>
+                                    </table>
+                                  </div>
+                                  </div>
+                                <!-- /.card-body -->
+
+                                <div class="card-footer clearfix">
+                                            <!-- Pagination -->
+                <ngb-pagination *ngIf="!loading && data" [collectionSize]="data.count" [pageSize]="size"
+                [page]="data.page" (pageChange)="loadData($event)" class="pagination pagination-sm m-0 float-right">
+              </ngb-pagination>
+              <!-- ./Pagination -->
+                                </div>
+
+
+                            </div>
+                        </div>
+            </div>
+          </div>
+        </section>
+
+      </div>
+      <!-- Content Wrapper. Contains page content -->
+
+
+      <!-- Customer save modal -->
+<ng-template #saveModal let-modal>
+
+        <!-- Modal header -->
+        <div class="modal-header">
+          <h4 class="modal-title">
+            {{ selectedCustomer.id ? ('Update Customer: ' + selectedCustomer.full_name) : 'Create new  Customer' }}</h4>
+          <button type="button" class="close" aria-label="Close" (click)="close(modal)">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <!-- ./Modal header -->
+
+        <!-- Modal body -->
+        <div class="modal-body">
+
+          <form [formGroup]="form">
+
+            <!-- full_name field -->
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="full_name" formControlName="full_name"
+                [class.has-error]="form.get('full_name').dirty && form.get('full_name').invalid" />
+            </div>
+            <!-- ./full_name field -->
+
+            <!-- full_name field validations container -->
+            <div class="row" *ngIf="form.get('full_name').dirty && form.get('full_name').invalid">
+              <div class="col-12">
+                <div class="alert alert-danger alert-transparent-left" role="alert"
+                  *ngIf="form.get('full_name').dirty && form.controls['full_name'].hasError('required')">
+                  The full_name is required
+                </div>
+                <div class="alert alert-danger alert-transparent-left" role="alert"
+                  *ngIf="form.get('full_name').dirty && form.get('full_name').hasError('maxLength')">
+                  The full_name must be less than 255 Digits
+                </div>
+              </div>
+            </div>
+            <!-- ./full_name field validations container -->
+
+
+          </form>
+
+        </div>
+        <!-- ./Modal body -->
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-dark" (click)="save(modal)"
+            [disabled]="form.invalid || savingCustomer">Save</button>
+        </div>
+        <!-- ./Modal footer -->
+
+      </ng-template>

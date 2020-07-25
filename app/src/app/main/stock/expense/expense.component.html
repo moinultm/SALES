@@ -1,0 +1,261 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Expenses</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">Home</a></li>
+            <li class="breadcrumb-item"><a>General</a></li>
+            <li class="breadcrumb-item active">Manage Expenses</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="card">
+              <div class="card-header">
+
+                <div class="row">
+
+<div class="col-md-4">
+
+    <h3 class="card-title">
+      List Expenses
+    </h3>
+</div>
+
+<div class="col-md-4"> <a href="#"  (click)="initSave(saveModal)">
+    <span class="badge bg-primary">
+      <i class="nav-icon fas fa-cart-plus"></i>
+      New Expenses
+    </span>
+  </a>
+</div>
+
+<div class="col-md-4">
+    <span class="badge bg-primary float-right">
+        <i class="nav-icon fas fa-search"></i>
+       Search</span>
+</div>
+
+                </div>
+
+
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+                <div class="table-responsive">
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="width: 10px">#</th>
+
+                      <th>Purpose</th>
+                      <th>Amount</th>
+                      <th>Date</th>
+
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                      <tr *ngIf="loading">
+                          <td colspan="12" class="text-center loading-data">
+                              <mat-spinner></mat-spinner>
+                          </td>
+                        </tr>
+                        <tr *ngIf="!loading && data && !data.data.length">
+                          <td colspan="12" class="text-center loading-data">
+                            No data created yet!
+                          </td>
+                        </tr>
+
+                        <ng-container *ngIf="!loading">
+                      <tr *ngFor="let item of data.data; let i = index">
+                      <td>{{ i+1 }}</td>
+                      <td>{{item.purpose}}</td>
+                      <td>{{item.amount}}</td>
+                      <td>{{item.date}}</td>
+                       <td>
+                        <button mat-icon-button color="accent" matTooltip="Edit"
+                        (click)="initSave(saveModal, item)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="accent" matTooltip="Delete"
+                        (click)="initDelete(deleteModal, item)">
+                            <mat-icon>restore_from_trash</mat-icon>
+                          </button>
+                      </td>
+
+                    </tr>
+                      </ng-container>
+                  </tbody>
+                </table>
+              </div>
+
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+              <!-- Pagination -->
+              <ngb-pagination *ngIf="!loading && data" [collectionSize]="data.count" [pageSize]="size"
+              [page]="data.page" (pageChange)="loadData($event)" class="pagination pagination-sm m-0 float-right">
+            </ngb-pagination>
+            <!-- ./Pagination -->
+              </div>
+            </div>
+               <!--Card-->
+          </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+<!-- Content Wrapper. Contains page content -->
+
+
+<!-- expense save modal -->
+<ng-template #saveModal let-modal>
+  <!-- Modal header -->
+  <div class="modal-header">
+    <h4 class="modal-title">
+      {{ selectedExpense.id ? ('Update expense: ' + selectedExpense.amount) : 'Create new expense' }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="close(modal)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- ./Modal header -->
+
+  <!-- Modal body -->
+  <div class="modal-body">
+
+
+
+    <form [formGroup]="form">
+
+      <!-- purpose field -->
+      <div class="form-group">
+        <label for="purpose">Purpose</label>
+        <input type="text" class="form-control" id="purpose" formControlName="purpose"
+          [class.has-error]="form.get('purpose').dirty && form.get('purpose').invalid" />
+      </div>
+      <!-- ./purpose field -->
+
+      <!-- purpose field validations container -->
+      <div class="row" *ngIf="form.get('purpose').dirty && form.get('purpose').invalid">
+        <div class="col-12">
+          <div class="alert alert-danger alert-transparent-left" expense="alert"
+            *ngIf="form.get('purpose').dirty && form.controls['purpose'].hasError('required')">
+            The purpose is required
+          </div>
+          <div class="alert alert-danger alert-transparent-left" expense="alert"
+            *ngIf="form.get('purpose').dirty && form.get('purpose').hasError('maxLength')">
+            The purpose must be less than 255 Digits
+          </div>
+        </div>
+      </div>
+      <!-- ./purpose field validations container -->
+
+      <!-- amount field -->
+      <div class="form-group">
+        <label for="amount">Amount</label>
+        <input type="text" class="form-control" id="amount" formControlName="amount"
+          [class.has-error]="form.get('amount').dirty && form.get('amount').invalid" />
+      </div>
+      <!-- ./amount field -->
+
+      <!-- amount field validations container -->
+      <div class="row" *ngIf="form.get('amount').dirty && form.get('amount').invalid">
+        <div class="col-12">
+          <div class="alert alert-danger alert-transparent-left" expense="alert"
+            *ngIf="form.get('amount').dirty && form.controls['amount'].hasError('required')">
+            The amount is required
+          </div>
+          <div class="alert alert-danger alert-transparent-left" expense="alert"
+            *ngIf="form.get('amount').dirty && form.get('amount').hasError('maxLength')">
+            The amount must be less than 255 digits
+          </div>
+        </div>
+      </div>
+      <!-- ./amount field validations container -->
+
+
+      <div class="form-group">
+
+        <div class="form-group">
+          <mat-form-field class="full-width">
+            <input matInput [matDatepicker]="picker" placeholder="Date" formControlName="date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+          <label>Spend By:</label>
+          <div class="input-group">
+             <div class="input-group-prepend">
+               <span class="input-group-text"><i class="fas fa-user-tie"></i> </span>
+             </div>
+             <select class="form-control" formControlName="user_id">
+                 <option [value]="null">Select User</option>
+                <option *ngFor="let list of users" [value]="list.id">
+                  {{list.name}}
+                </option>
+              </select>
+           </div>
+
+        </div>
+
+
+    </form>
+
+  </div>
+  <!-- ./Modal body -->
+
+  <!-- Modal footer -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="save(modal)"
+      [disabled]="form.invalid || savingExpense">Save</button>
+  </div>
+  <!-- ./Modal footer -->
+
+</ng-template>
+<!-- ./expense save modal -->
+
+
+
+  <!-- Expense delete confirmation modal -->
+  <ng-template #deleteModal let-modal>
+
+    <!-- Modal header -->
+    <div class="modal-header">
+      <h4 class="modal-title">Delete Expense</h4>
+      <button type="button" class="close" aria-label="Close" (click)="close(modal)">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <!-- ./Modal header -->
+
+    <!-- Modal body -->
+    <div class="modal-body">
+      <p>Are you sure you want to delete this Expense?</p>
+    </div>
+    <!-- ./Modal body -->
+
+    <!-- Modal footer -->
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-danger"   (click)="delete(modal)">Delete</button>
+    </div>
+    <!-- ./Modal footer -->
+
+  </ng-template>
+  <!-- ./Expense delete confirmation modal -->

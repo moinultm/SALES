@@ -1,0 +1,287 @@
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <!--div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark"> {{ 'TITLE' | translate }}!</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#">Home</a></li>
+              <li class="breadcrumb-item active">Dashboard v3</li>
+            </ol>
+          </div>
+        </div-->
+      </div>
+    </div>
+    <!-- /.content-header -->
+
+    <!-- Main content -->
+    <div class="content">
+      <div class="container-fluid">
+
+          <div class="row"  *ngIf="!loading" >
+              <div class="col-lg-3 col-6" >
+                <!-- small box -->
+                <div class="small-box bg-info">
+                  <div class="inner">
+                    <h3>{{data.todays_stats.total_selling_price}}৳</h3>
+                    <p>Today Sales,  {{data.todays_stats.total_selling_quantity}} Pcs </p>
+
+                  </div>
+                  <div class="icon">
+                    <i class="fas fa-money-bill-wave"></i>
+                   </div>
+                  <a href="#" [routerLink]="['/sell']" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-success">
+                  <div class="inner">
+                     <h3>{{data.todays_stats.total_purchasing_price}}৳</h3>
+                    <p>Today Purchases, {{data.todays_stats.total_purchasing_quantity}} Pcs</p>
+                     <p></p>
+                  </div>
+                  <div class="icon">
+                     <i class="fas fa-shopping-bag"></i>
+                  </div>
+                  <a href="#" [routerLink]="['/purchase']" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <!-- ./col -->
+              <div class="col-lg-3 col-6">
+                <!-- small box -->
+                <div class="small-box bg-warning">
+                  <div class="inner">
+                     <h3>{{data.todays_stats.total_transactions_today}}৳</h3>
+                      <p>Today Transactaion</p>
+                     <p></p>
+                  </div>
+                  <div class="icon">
+                     <i class="fas fa-money-bill-wave"></i>
+                  </div>
+                  <a href="#" [routerLink]="['/purchase']" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+              </div>
+              <!-- ./col -->
+
+                       <!-- ./col -->
+                       <div class="col-lg-3 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-danger">
+                          <div class="inner">
+                             <h3>{{data.today_expenses}}৳</h3>
+                              <p>Today Expenses</p>
+
+                          </div>
+                          <div class="icon">
+                             <i class="fas fa-money-bill-wave"></i>
+                          </div>
+                          <a href="#" [routerLink]="['/expenses']" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                      </div>
+                      <!-- ./col -->
+
+              <!-- ./col -->
+            </div>
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="card">
+                  <div class="card-header no-border">
+                    <div class="d-flex justify-content-between">
+                      <h3 class="card-title">Sell Vs Purchase</h3>
+
+                    </div>
+                  </div>
+                  <div class="card-body">
+
+
+                    <div class="position-relative mb-4" *ngIf="sellChartData.length > 0">
+
+                      <canvas
+                      baseChart
+                      [chartType]="'line'"
+                      [datasets]="sellChartData"
+                      [labels]="chartLabels"
+                      [options]="chartOptions"
+                      [legend]="true"
+                      height="150"
+                      (chartClick)="onChartClick($event)">
+                  </canvas>
+                    </div>
+
+
+                  </div>
+                </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card">
+                      <div class="card-header no-border">
+                        <div class="d-flex justify-content-between">
+                          <h3 class="card-title">This Month Best Selling Products</h3>
+
+                        </div>
+                      </div>
+                      <div class="card-body">
+
+                        <div class="position-relative mb-4">
+
+
+
+
+                      <div style="display: block"  *ngIf="barChartData.length > 0">
+                          <canvas
+                                 baseChart
+                                  [datasets]="barChartData"
+                                  [labels]="barChartLabels"
+                                  [options]="barChartOptions"
+                                  [legend]="barChartLegend"
+                                  height="150"
+                                  [chartType]="barChartType">
+                          </canvas>
+
+
+                        </div>
+
+
+                      </div>
+                    </div>
+                    </div>
+</div>
+            </div>
+            <!--Row-->
+
+            <div class="row">
+
+
+
+            </div> <!--Row-->
+
+
+
+
+            <div class="row">
+                <div class="col-lg-6">
+
+                  <div class="card">
+                      <div class="card-header no-border">
+                        <h3 class="card-title">Purchase Invoices (7) Days</h3>
+                        <div class="card-tools">
+                          <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fa fa-download"></i>
+                          </a>
+                          <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fa fa-bars"></i>
+                          </a>
+                        </div>
+                      </div>
+                      <div class="card-body p-0 table-responsive" style="height: 300px;">
+                        <table class="table table-striped table-valign-middle" *ngIf="!loading">
+                          <thead>
+                          <tr>
+                              <th>#</th>
+                            <th>Invoice No</th>
+                            <th>Amount</th>
+                            <th>Paid</th>
+                            <th>From</th>
+                            <th>View</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          <tr *ngFor="let TL of data.todayPurchaseList; let i = index">
+
+                                <td>{{ i+1 }}</td>
+
+                                <td>{{ TL.reference_no }}</td>
+                                <td>{{ TL.net_total }}</td>
+                                <td>{{ TL.paid }}</td>
+                                <td>{{ TL.client_name }}</td>
+
+                          <td> Details </td>
+                          </tr>
+
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                  </div>
+
+                  <div class="col-lg-6">
+
+                <div class="card">
+                    <div class="card-header no-border">
+                      <h3 class="card-title">Sell Invoices (7) Days</h3>
+                      <div class="card-tools">
+                        <a href="#" class="btn btn-tool btn-sm">
+                          <i class="fa fa-download"></i>
+                        </a>
+                        <a href="#" class="btn btn-tool btn-sm">
+                          <i class="fa fa-bars"></i>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="card-body p-0  table-responsive" style="height: 300px;">
+                      <table class="table table-striped" *ngIf="!loading">
+                        <thead>
+                        <tr>
+                            <th width="20px">#</th>
+                          <th>Invoice No</th>
+                          <th>Amount</th>
+                          <th>Paid</th>
+                          <th>Soled by</th>
+                          <th>View</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let TL of data.today_sell_list; let i = index">
+
+                              <td>{{ i+1 }}</td>
+
+                              <td>{{ TL.reference_no }}</td>
+                              <td>{{ TL.net_total }}</td>
+                              <td>{{ TL.paid }}</td>
+
+                          <td>{{ TL.user_name  }} </td>
+
+                        <td> Details </td>
+                        </tr>
+
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+
+      <!--
+      <button class='button' (click)='getLoc()'></button>
+      <div><p>{{location}}</p>
+      <p>Settings:- {{  'site_name' | config }}  </p>
+      </div>
+      -->
+
+
+
+
+                </div>
+
+
+
+
+
+              </div> <!--Row-->
+
+
+      </div>
+      <!-- /.container-fluid -->
+    </div>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->

@@ -1,0 +1,185 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Print Barcode by bill</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">Home</a></li>
+              <li class="breadcrumb-item"><a>Purchase</a></li>
+              <li class="breadcrumb-item active">Print Barcode/li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-outline">
+                    <div class="card-header">
+                      <h3 class="card-title">
+                        <i class="fas fa-edit"></i>
+                        Barcode Printing
+                      </h3>
+                    </div>
+                    <div class="card-body">
+
+                        <div >
+                          <div class="panel-heading" >
+                            <div class="form-group">
+                              <div class="row">
+                                <div class="col-md-12"><label>Print Per Page</label> <select class="form-control">
+                                    <option disabled="disabled" value="">Please select one</option>
+                                    <option value="pp40">Per Page 40</option>
+                                    <option value="pp40">Per Page 40</option>
+                                  </select></div>
+                              </div>
+                            </div>
+                            <div class="form-group">
+                              <div class="row">
+                                <div class="col-md-2">
+                                  <div class="checkbox-custom checkbox-custom-success">
+                                      <input type="checkbox" name="isSiteName"  [(ngModel)]="barcoded.isSiteName">
+                                     <label for="checkbox3">Site Name</label></div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="checkbox-custom checkbox-custom-success">
+                                    <input type="checkbox"  name="isProductName" [(ngModel)]="barcoded.isProductName">
+                                    <label for="checkbox4">Product Name</label>
+                                  </div>
+                                </div>
+                                <div class="col-md-2">
+                                  <div class="checkbox-custom checkbox-custom-success">
+                                    <input id="checkbox1" type="checkbox"  name="isProductPrice" [(ngModel)]="barcoded.isProductPrice"> <label
+                                      for="checkbox1">
+                                      Product Price
+                                    </label></div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="checkbox-custom checkbox-custom-success">
+                                      <input id="checkbox1" type="checkbox"  name="isClientCode" [(ngModel)]="barcoded.isClientCode"> <label
+                                        for="checkbox1">
+                                        Client Code
+                                      </label></div>
+                                  </div>
+
+                              </div>
+                            </div>
+                          </div>
+
+
+                          <div class="row">
+
+
+                            <div class="col-md-12">
+
+                                <div class="form-group">
+                                    <label class="form-check-label">Select invoice</label>
+
+                                <div *ngIf="!loading">
+                                    <ng-select [items]="data.data"
+                                     bindLabel="reference_no"
+                                     autofocus
+                                     bindValue="id"
+                                     [(ngModel)]="selectedInvoiceId"
+                                     (change)="ShowBillDetails(selectedInvoiceId)">
+                                     </ng-select>
+                                   </div>
+                                  </div>
+                            </div>
+                          </div>
+
+               <!--input type="button" class="btn btn-success btn-xs"  value="Generate" id="generate" (click)="ShowBillDetails(selectedInvoiceId)"-->
+
+                      <br/>
+
+                          <br>
+
+                          <div class="row">
+                            <div class="col-md-12">
+                              <input type="button" class="btn btn-block btn-xs"  value="print" id="print" (click)="print()" >
+                            </div>
+                          </div>
+                        </div>
+
+
+                      <div *ngIf="!loadingDetails" id="section-to-print" class="a4paper">
+                      <div *ngFor="let T of detailsData.data; let i = index">
+                          <div *ngFor="let TD of T.purchases ; let i = index">
+
+                                <div *ngFor="let TDQ of counter(TD.quantity) ; let i = index">
+
+                                    <div class="barcode-item">
+                                        <div  [ngClass]="barcoded.ppp" >
+
+                                    <p *ngIf="barcoded.isSiteName" class="barcode-info-p">
+                                     Company
+                                      </p>
+                                      <p  *ngIf="barcoded.isProductName"  class="barcode-info-p">
+                                          {{TD.product.name}}
+                                        </p>
+
+                                        <ngx-barcode [bc-element-type]="elementType" [bc-value]="TD.product.code" [bc-format]="format"
+                                        [bc-line-color]="lineColor" [bc-width]="width" [bc-height]="50"  [bc-display-value]="displayValue">
+                                      </ngx-barcode>
+                                      <p class="barcode-info-p"  *ngIf="barcoded.isProductPrice" >
+                                          MRP: {{TD.product.mrp}} + Vat
+                                          </p>
+
+                                        </div>
+                                      </div>
+
+                                </div>
+
+                          </div>
+                      </div>
+
+
+
+                         </div>
+
+
+
+
+                        <!--div id="section-to-print" class="a4paper">
+
+
+                          <div class="barcode-item">
+                            <div  [ngClass]="barcoded.ppp" >
+                              <p *ngIf="barcoded.isSiteName" class="barcode-info-p">
+                                Yahoo.com
+                              </p>
+                              <p  *ngIf="barcoded.isProductName"  class="barcode-info-p">
+
+                                GM-60 Facewash
+                              </p>
+                                    <p class="barcode-info-p"> <small  *ngIf="barcoded.isClientCode" class="small"><b>CSID#MR-01</b></small></p>
+                              <img                                 src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGUAAAAhAQMAAAD6e/f2AAAABlBMVEX///8BAQE6HLieAAAAAXRSTlMAQObYZgAAABxJREFUGJVjuDB5s6Xfucjbu8uUjkcwjPKGNA8AygXpMhXD/eEAAAAASUVORK5CYII=">
+                              <br> <small class="small"><b>020977</b></small>
+                              <p class="barcode-info-p"  *ngIf="barcoded.isProductPrice" >
+                              MRP:BDT 500 + Vat
+                              </p>
+                            </div>
+                          </div
+
+
+
+                        </div--> <!--Print Area-->
+
+
+                    </div>
+                    <!-- /.card -->
+                  </div>
+            </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <!-- Content Wrapper. Contains page content -->

@@ -1,0 +1,266 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Warehouse</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">Home</a></li>
+            <li class="breadcrumb-item"><a>Stock</a></li>
+            <li class="breadcrumb-item active">Manage Warehouse</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">List Warehouse
+
+
+                      <a href="#"  (click)="initSave(saveModal)">
+                        <span class="badge bg-primary">
+                          <i class="nav-icon fas fa-cart-plus"></i>
+                          New Warehouse
+                        </span>
+                      </a>
+                    <span class="badge bg-primary float-right">
+                       <i class="nav-icon fas fa-search"></i>
+                      Search</span>
+                </h3>
+
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body">
+<div class="table-responsive">
+
+
+                <table class="table table-bordered">
+                  <thead>
+                    <tr>
+                      <th style="width: 10px">#</th>
+
+                      <th>Name</th>
+                      <th>Address</th>
+                      <th>Phone</th>
+                      <th>In Charge Name</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+                      <tr *ngIf="loading">
+                          <td colspan="12" class="text-center loading-data">
+                              <mat-spinner></mat-spinner>
+                          </td>
+                        </tr>
+                        <tr *ngIf="!loading && data && !data.data.length">
+                          <td colspan="12" class="text-center loading-data">
+                            No data created yet!
+                          </td>
+                        </tr>
+
+                        <ng-container *ngIf="!loading">
+                      <tr *ngFor="let item of data.data; let i = index">
+                      <td>{{ i+1 }}</td>
+                      <td>{{item.name}}</td>
+                      <td>{{item.address}}</td>
+                      <td>{{item.phone}}</td>
+                      <td>{{item.in_charge_name}}</td>
+                      <td>
+                        <button mat-icon-button color="accent" matTooltip="Edit"
+                        (click)="initSave(saveModal, item)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-icon-button color="accent" matTooltip="Delete"
+                       >
+                            <mat-icon>restore_from_trash</mat-icon>
+                          </button>
+                      </td>
+
+                    </tr>
+                      </ng-container>
+                  </tbody>
+                </table>
+              </div>
+
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer clearfix">
+              <!-- Pagination -->
+              <ngb-pagination *ngIf="!loading && data" [collectionSize]="data.count" [pageSize]="size"
+              [page]="data.page" (pageChange)="loadData($event)" class="pagination pagination-sm m-0 float-right">
+            </ngb-pagination>
+            <!-- ./Pagination -->
+              </div>
+            </div>
+               <!--Card-->
+          </div>
+
+      </div>
+    </div>
+  </section>
+
+</div>
+<!-- Content Wrapper. Contains page content -->
+
+
+<!-- warehouse save modal -->
+<ng-template #saveModal let-modal>
+  <!-- Modal header -->
+  <div class="modal-header">
+    <h4 class="modal-title">
+      {{ selectedWarehouse.id ? ('Update warehouse: ' + selectedWarehouse.address) : 'Create new warehouse' }}</h4>
+    <button type="button" class="close" aria-label="Close" (click)="close(modal)">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <!-- ./Modal header -->
+
+  <!-- Modal body -->
+  <div class="modal-body">
+
+    <form [formGroup]="form">
+
+      <!-- name field -->
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" formControlName="name"
+          [class.has-error]="form.get('name').dirty && form.get('name').invalid" />
+      </div>
+      <!-- ./name field -->
+
+      <!-- name field validations container -->
+      <div class="row" *ngIf="form.get('name').dirty && form.get('name').invalid">
+        <div class="col-12">
+          <div class="alert alert-danger alert-transparent-left" warehouse="alert"
+            *ngIf="form.get('name').dirty && form.controls['name'].hasError('required')">
+            The name is required
+          </div>
+          <div class="alert alert-danger alert-transparent-left" warehouse="alert"
+            *ngIf="form.get('name').dirty && form.get('name').hasError('maxLength')">
+            The name must be less than 255 Digits
+          </div>
+        </div>
+      </div>
+      <!-- ./name field validations container -->
+
+      <!-- address field -->
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" class="form-control" id="address" formControlName="address"
+          [class.has-error]="form.get('address').dirty && form.get('address').invalid" />
+      </div>
+      <!-- ./address field -->
+
+      <!-- address field validations container -->
+      <div class="row" *ngIf="form.get('address').dirty && form.get('address').invalid">
+        <div class="col-12">
+          <div class="alert alert-danger alert-transparent-left" warehouse="alert"
+            *ngIf="form.get('address').dirty && form.controls['address'].hasError('required')">
+            The address is required
+          </div>
+          <div class="alert alert-danger alert-transparent-left" warehouse="alert"
+            *ngIf="form.get('address').dirty && form.get('address').hasError('maxLength')">
+            The address must be less than 255 digits
+          </div>
+        </div>
+      </div>
+      <!-- ./address field validations container -->
+
+
+
+       <!-- phone field -->
+       <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="text" class="form-control" id="phone" formControlName="phone"
+          [class.has-error]="form.get('phone').dirty && form.get('phone').invalid" />
+      </div>
+      <!-- ./phone field -->
+
+      <!-- phone field validations container -->
+      <div class="row" *ngIf="form.get('phone').dirty && form.get('phone').invalid">
+        <div class="col-12">
+          <div class="alert alert-danger alert-transparent-left" warehouse="alert"
+            *ngIf="form.get('phone').dirty && form.controls['phone'].hasError('required')">
+            The phone is required
+          </div>
+          <div class="alert alert-danger alert-transparent-left" warehouse="alert"
+            *ngIf="form.get('phone').dirty && form.get('phone').hasError('maxLength')">
+            The phone must be less than 15 digits
+          </div>
+        </div>
+      </div>
+      <!-- ./phone field validations container -->
+
+
+            <!-- email field -->
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="text" class="form-control" id="email" formControlName="email"
+                [class.has-error]="form.get('email').dirty && form.get('email').invalid" />
+            </div>
+            <!-- ./email field -->
+
+            <!-- email field validations container -->
+            <div class="row" *ngIf="form.get('email').dirty && form.get('email').invalid">
+              <div class="col-12">
+                <div class="alert alert-danger alert-transparent-left" warehouse="alert"
+                  *ngIf="form.get('email').dirty && form.controls['email'].hasError('required')">
+                  The email is required
+                </div>
+                <div class="alert alert-danger alert-transparent-left" warehouse="alert"
+                  *ngIf="form.get('email').dirty && form.get('email').hasError('maxLength')">
+                  The email must be less than 15 digits
+                </div>
+              </div>
+            </div>
+            <!-- ./email field validations container -->
+
+
+                  <!-- incharge_name field -->
+       <div class="form-group">
+        <label for="incharge_name">Incharge Name</label>
+        <input type="text" class="form-control" id="incharge_name" formControlName="incharge_name"
+          [class.has-error]="form.get('incharge_name').dirty && form.get('incharge_name').invalid" />
+      </div>
+      <!-- ./incharge_name field -->
+
+      <!-- incharge_name field validations container -->
+      <div class="row" *ngIf="form.get('incharge_name').dirty && form.get('incharge_name').invalid">
+        <div class="col-12">
+          <div class="alert alert-danger alert-transparent-left" warehouse="alert"
+            *ngIf="form.get('incharge_name').dirty && form.controls['incharge_name'].hasError('required')">
+            The incharge_name is required
+          </div>
+          <div class="alert alert-danger alert-transparent-left" warehouse="alert"
+            *ngIf="form.get('incharge_name').dirty && form.get('incharge_name').hasError('maxLength')">
+            The incharge_name must be less than 15 digits
+          </div>
+        </div>
+      </div>
+      <!-- ./incharge_name field validations container -->
+
+    </form>
+
+  </div>
+  <!-- ./Modal body -->
+
+  <!-- Modal footer -->
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="save(modal)"
+      [disabled]="form.invalid  ">Save</button>
+  </div>
+  <!-- ./Modal footer -->
+
+</ng-template>
+<!-- ./warehouse save modal -->

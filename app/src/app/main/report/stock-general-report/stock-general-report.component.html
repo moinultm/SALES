@@ -1,0 +1,205 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Stock In-Hand Report</h1>
+        </div>
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">Home</a></li>
+            <li class="breadcrumb-item"><a>Report</a></li>
+            <li class="breadcrumb-item active">Stock Report</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+ <!-- Content Header (Page header) -->
+
+
+  <section class="content">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-12">
+
+          <div class="card mb-3">
+            <div class="col-md-9 text-center mx-auto">
+              <form [formGroup]="form">
+               <div class="tool-style">
+                 <div class="row">
+
+                  <div class="col-md-12 mb-3">
+                    <div class="row">
+                      <div class="col-md-4"><mat-form-field class="full-width">
+                        <input matInput [matDatepicker]="pickerFrom" placeholder="Start Date"
+                          formControlName="fromDate" [value]="date.value">
+                        <mat-datepicker-toggle matSuffix [for]="pickerFrom"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerFrom></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                    <div class="col-md-4"><mat-form-field class="full-width">
+                        <input matInput [matDatepicker]="pickerTo" placeholder="End Date" formControlName="toDate"
+                          [value]="date.value">
+                        <mat-datepicker-toggle matSuffix [for]="pickerTo"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerTo></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+
+                      <div class="col-md-2 mb-3 my-auto">
+                        <button type="button" name="search" id="search" value="Search" (click)="dateFilter()" class="btn btn-success"
+                        [disabled]="form.invalid"><i class="fas fa-search"></i>&nbsp;Search</button>
+                      </div>
+
+                      <div class="col-md-2 mb-3 my-auto">
+                        <button type="button" name="print" id="search" value="Print" (click)="print('print-section')" class="btn btn-default"
+                        [disabled]="form.invalid"><i class="fas fa-print"></i>&nbsp;Print</button>
+                      </div>
+                  </div>
+                </div>
+          </div>
+        </div><!--Tool Style-->
+    </form>
+  </div>
+          </div>
+          <!--card mb-3-->
+
+          <div class="card">
+            <div  class="card-body">
+
+            <!--SECOND TABLE-->
+    <div id="print-section" >
+      <div class="pageA4landscape">
+         <!--HEADER-->
+            <div class="row mb-3  text-center">
+              <div class="col-md-5">
+               <!--img src="{{logoPreview}}{{'invoice_header' | configure }} " alt="" class="img-fluid"-->
+               <img src="/assets/images/trade-2.jpg" class="img-fluid">
+              </div>
+              <div class="col-md-2">
+              </div>
+              <div class="col-md-4">
+                <p></p>
+                <h5>Stock In-Hand Report</h5>
+                <p>From Date: <strong>{{fromDate| date: 'dd/MM/yyyy'}}</strong>  To: <strong>{{toDate |date: 'dd/MM/yyyy'}}</strong> </p>
+                </div>
+            </div>
+
+        <div class="table-responsive">
+
+          <div *ngIf="loading" style="min-height:250px">
+            <p><strong>Report Data Not Generated</strong> </p>
+              <mat-spinner></mat-spinner>
+            </div>
+
+          <!--Replacing with controller2 for Pivot Table-->
+              <ng-container *ngIf="!loading">
+                  <table class="table  table-bordered table-mini table-hover dataTable">
+                    <thead>
+                      <tr>
+                        <th>#</th>
+                        <th >Product Name</th>
+                        <th>Opening</th>
+                        <th>Stock In</th>
+                        <th>Stock Total </th>
+                        <th>Stock Out</th>
+                        <th>Stock Total </th>
+                        <th>Gift&Sample</th>
+                        <th>Damage</th>
+                        <th>Running Stock</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+
+
+                      <tr *ngIf="!loading && data && !data.product.length">
+                        <td colspan="12" class="text-center loading-data">
+                          No Data created yet!
+                        </td>
+                      </tr>
+
+
+                      <tr *ngFor="let P of data.product; let i = index">
+                        <td class="bg-light-green"> {{ i+1 }}</td>
+                        <td class="bg-light-green"> {{ P.STOCK_ITEM_NAME }}</td>
+                        <td> {{ P.TRAN_QUANTITY }} </td>
+                        <td> {{ P.INWARD_QUANTITY }} </td>
+                        <td > <strong>{{ _CIN(P.TRAN_QUANTITY)+_CIN(P.INWARD_QUANTITY) }}</strong></td>
+                         <td>{{ _CIP(P.OUTWARD_QUANTITY) }}</td>
+                         <td ><strong>{{ _CIN(P.TRAN_QUANTITY)+_CIN(P.OUTWARD_QUANTITY) +_CIN(P.INWARD_QUANTITY)  }}</strong></td>
+                        <td> {{  _CIP(P.GIFT_QUANTITY) }}</td>
+                        <td>  {{  _CIP(P.DAMAGE_QUANTITY) }} </td>
+                        <td><strong>{{ _CIN(P.TRAN_QUANTITY)+_CIN(P.OUTWARD_QUANTITY) +_CIN(P.GIFT_QUANTITY) +_CIN(P.DAMAGE_QUANTITY)+_CIN(P.INWARD_QUANTITY)  }}</strong></td>
+
+                      </tr>
+
+                      <tr *ngIf="!loading" class="bg-light-green">
+                        <td>#</td>
+                        <td><b>Summary </b></td>
+                        <td ><b> {{ openingTotal }}</b></td >
+                        <td><b> {{ inTotal }}</b></td>
+                        <td><b>{{ openingTotal + inTotal}} </b></td>
+                        <td><b> {{  _CIP(outTotal) }}</b></td>
+                        <td><b> {{openingTotal + inTotal+  _CIN(outTotal) }}</b></td>
+                        <td><b> {{  _CIP(gftTotal) }}</b></td>
+                        <td><b> {{  _CIP(dmgTotal) }}</b></td>
+                        <td><b>{{openingTotal + inTotal+ outTotal + dmgTotal +gftTotal}}</b></td>
+                      </tr>
+                    </tbody>
+
+
+                  </table>
+                </ng-container>
+
+                <!--div id="output"></div-->
+
+          </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-12 text-center">
+              <div class="page-footer">
+                {{'address' | configure }}<br>
+                Cell:{{'phone' | configure }}&#44;Email:{{'email' | configure }}<br>
+                {{'pos_invoice_footer_text' | configure }}
+              </div>
+
+              <!--div class="page-footer">
+                Head Office: 81/2(Ground floor), Nayapaltan,Dhaka-1000,Bangladesh<br>
+                Cell:+8801793000277,Email:giasuddin8832@gmail.com, gmtradeint2004@gmail.com<br>
+                Web:www.gmtradeinternational.com, F /gmtradeinternational&zarifcorporation
+              </div-->
+
+            </div>
+          </div>
+
+                </div> <!--print-section end-->
+
+
+            </div>
+
+          </div>
+          <!--Card -->
+
+
+
+
+        </div>
+
+
+      </div>
+    </div>
+  </section>
+
+</div>
+<!-- Content Wrapper. Contains page content -->
+
+
+
+
+
+<!-- npm npm install jqwidgets-ng  --save
+npm install jqwidgets-scripts --save
+-->

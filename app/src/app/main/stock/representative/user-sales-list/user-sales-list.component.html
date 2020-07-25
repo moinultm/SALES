@@ -1,0 +1,107 @@
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0 text-dark">Represtative Stock Quantity</h1>
+          </div><!-- /.col -->
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">Home</a></li>
+              <li class="breadcrumb-item"><a>Represtative</a></li>
+              <li class="breadcrumb-item active">Quantity Report</li>
+            </ol>
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </div>
+
+    <section class="content">
+      <div class="container-fluid">
+        <div class="row">
+          <div class="col-md-12">
+          <div class="card  card-info">
+              <div class="card-header" >
+                  <h3 class="card-title">
+                      Stock List of  Mr.  : {{ jwtHelper.name() }}
+                  </h3>
+                  <div class="card-tools" >
+                       <div class="input-group input-group-sm" *ngIf="!loadingUser">
+                          <label>User:</label>
+                          <select class="form-control" (change)="changeSelection($event.target.value)">
+                            <option [value]="0">--All--</option>
+                            <option *ngFor="let list of users.data" [value]="list.id">
+                              {{list.id}} :: {{list.name}}
+                            </option>
+                          </select>
+                  </div>
+              </div>
+
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body p-0">
+                  <table class="table">
+                      <thead>
+                          <tr>
+                              <th style="width: 10px">#</th>
+                              <th>Product</th>
+                              <th>Qty</th>
+                              <th>MRP</th>
+                              <th>Discount %</th>
+                              <th>Discount Amount</th>
+                              <th>Total</th>
+                              <th style="width:20%">Action</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                              <tr *ngIf="loading">
+                                      <td colspan="12" class="text-center loading-data">
+                                          <mat-spinner></mat-spinner>
+                                      </td>
+                              </tr>
+                                    <tr *ngIf="!loading && data && !data.data.length">
+                                      <td colspan="12" class="text-center loading-data">
+                                        No Data created yet!
+                                      </td>
+                                    </tr>
+
+                                    <ng-container *ngIf="!loading">
+                                      <tr *ngFor="let item of data.data; let i = index">
+                                        <td>{{ i+1 }}</td>
+
+                                        <td>{{item.name}} </td>
+                                        <td> {{item.quantity}}</td>
+                                        <td>{{item.mrp}} </td>
+                                        <td> {{item.product_discount_percentage}}</td>
+                                        <td> {{item.product_discount_amount}}</td>
+                                        <td> {{item.sub_total}}</td>
+                                        <td class="actions">
+                                            <div class="btn-group">
+                                                 <button type="button" class="btn btn-default" ><i class="fa fa-eye"></i></button>
+                                             </div>
+                                        </td>
+                                      </tr>
+                                    </ng-container>
+                      </tbody>
+                  </table>
+              </div>
+              <!-- /.card-body -->
+
+              <div class="card-footer clearfix">
+                  <!-- Pagination -->
+              <ngb-pagination *ngIf="!loading && data" [collectionSize]="data.count" [pageSize]="size"
+              [page]="data.page" (pageChange)="loadData($event)" class="pagination pagination-sm m-0 float-right">
+            </ngb-pagination>
+            <!-- ./Pagination -->
+              </div>
+
+
+          </div>
+      </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <!-- Content Wrapper. Contains page content -->

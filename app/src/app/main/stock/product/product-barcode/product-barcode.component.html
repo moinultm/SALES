@@ -1,0 +1,193 @@
+<div class="content-wrapper">
+  <!-- Content Header (Page header) -->
+  <div class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-6">
+          <h1 class="m-0 text-dark">Barcode Generator</h1>
+        </div><!-- /.col -->
+        <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#" [routerLink]="['/dashboard']">Home</a></li>
+            <li class="breadcrumb-item"><a>Product</a></li>
+            <li class="breadcrumb-item active">Manage Barcode</li>
+          </ol>
+        </div><!-- /.col -->
+      </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+  </div>
+
+  <section class="content">
+    <div class="container-fluid">
+
+      <div class="row">
+
+
+          <div class="col-md-3">
+
+
+
+
+              <!-- Profile Image -->
+              <div class="card card-primary card-outline" *ngIf="!loading">
+
+                <div class="card-body box-profile" *ngFor="let item of data.data; let i = index">
+
+                  <div class="text-center">
+                      <ngx-barcode [bc-element-type]="elementType" [bc-value]="item.code" [bc-format]="format"
+                      [bc-line-color]="lineColor" [bc-width]="width" [bc-height]="height" [bc-display-value]="displayValue">
+                    </ngx-barcode>
+                   </div>
+
+                  <h3 class="profile-username text-center">{{item.name}}</h3>
+
+                  <p class="text-muted text-center">MRP {{item.mrp}}</p>
+
+                  <ul class="list-group list-group-unbordered mb-3">
+                    <!--li class="list-group-item">
+                      <b>Stock</b> <a class="float-right">{{  item.quantity }}</a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Sale</b> <a class="float-right">{{ item.total_sells }}</a>
+                    </li>
+                    <li class="list-group-item">
+                      <b>Purchase</b> <a class="float-right">{{ item.total_purchases }}</a>
+                    </li-->
+
+                    <li class="list-group-item">
+                        <div class="checkbox-custom checkbox-custom-success">
+                            <input type="checkbox" name="isSiteName"  [(ngModel)]="barcoded.isSiteName">
+                           <label for="checkbox3">Site Name</label>
+                          </div>
+                      </li>
+
+                      <li class="list-group-item">
+                          <div class="checkbox-custom checkbox-custom-success">
+                              <input type="checkbox"  name="isProductName" [(ngModel)]="barcoded.isProductName">
+                              <label for="checkbox4">Product Name</label>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="checkbox-custom checkbox-custom-success">
+                                <input id="checkbox1" type="checkbox"  name="isProductPrice" [(ngModel)]="barcoded.isProductPrice"> <label
+                                  for="checkbox1">
+                                  Product Price
+                                </label></div>
+                          </li>
+                          <li class="list-group-item">
+                              <div class="checkbox-custom checkbox-custom-success">
+                                  <input id="checkbox1" type="checkbox"  name="isClientCode" [(ngModel)]="barcoded.isClientCode"> <label
+                                    for="checkbox1">
+                                    Client Code
+                                  </label></div>
+
+
+                                  <div class="form-group">
+                                      <label>Customer Name</label>
+
+                                      <div class="input-group">
+                                          <div class="input-group-prepend">
+                                            <span class="input-group-text"> <i class="fas fa-user-tag"></i></span>
+                                          </div>
+                                          <select class="form-control"   [(ngModel)]="selectedClientCode">
+                                              <option [value]="null">Select Customer</option>
+                                            <option *ngFor="let list of customerList" [value]="list.client_code">
+                                              {{list.full_name}} {{list.client_code}}
+                                            </option>
+                                          </select>
+                                        </div>
+                                    </div>
+
+
+                            </li>
+
+                            <li class="list-group-item">
+                                <label>Count</label>
+
+                              <input class="form-control" type="number"    [(ngModel)]="countPrint"     name="countPrint" step="1">
+                              </li>
+
+
+                              <li class="list-group-item">
+                                  <label>Prod.Date</label>
+                                <input class="form-control" type="text"    [(ngModel)]="prodDate"     name="prodDate" >
+                                </li>
+
+                                <li class="list-group-item">
+                                    <label>Exp.Date</label>
+                                  <input class="form-control" type="text"    [(ngModel)]="expdDate"     name="expDate" >
+                                  </li>
+                  </ul>
+
+
+
+
+                 </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+
+            </div>
+
+
+
+        <!-- /.col (left) -->
+        <div class="col-md-9" *ngIf="!loading">
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Printing Page</h3>
+            </div>
+            <!-- /.card-header -->
+
+            <div id="print-section" class="card-body " *ngFor="let item of data.data;">
+
+                <div *ngFor="let TDQ of counter(countPrint) ;">
+
+                    <div class="barcode-item">
+                        <div  [ngClass]="barcoded.ppp" >
+
+                    <p *ngIf="barcoded.isSiteName" class="barcode-info-p">
+                     {{ 'site_name' | configure }}
+                      </p>
+                      <p  *ngIf="barcoded.isProductName"  class="barcode-info-p">
+                          {{item.name}} /    {{item.code}}
+                        </p>
+
+                        <ngx-barcode *ngIf="barcoded.isClientCode" [bc-element-type]="elementType" [bc-value]="selectedClientCode" [bc-format]="format"
+                        [bc-line-color]="lineColor" [bc-width]="1" [bc-height]="50"  [bc-display-value]="false">
+                      </ngx-barcode>
+                      <p class="barcode-info-p"  *ngIf="barcoded.isProductPrice" >
+                          MRP: {{item.mrp}} + Vat
+                          </p>
+
+                          <p class="barcode-info-p"  *ngIf="barcoded.isProductPrice" >
+                              P.Date:{{prodDate}},E.Date {{expdDate}}
+                          </p>
+                        </div>
+                      </div>
+            </div>
+
+
+              <div class="row no-print">
+                <div class="col-12">
+                  <a href="#" (click)="print()" class="btn btn-success float-right"><i class="fas fa-print"></i>
+                    Print</a>
+
+
+                </div>
+
+              </div>
+            </div>
+            <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+        </div>
+        <!-- /.col (right) -->
+      </div>
+
+
+    </div>
+  </section>
+
+</div>
+<!-- Content Wrapper. Contains page content -->
